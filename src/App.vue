@@ -4,7 +4,7 @@
     <h2 ref="overlayNode">Vite + Vue 3 + TypeScript</h2>
   </header> -->
   <header>
-    <Tooltip content="this is a tooltip" placement="bottom" :trigger="trigger">
+    <Tooltip content="this is a tooltip" placement="bottom" :trigger="trigger" :manual="true" ref="tooltipRef">
       <h1>rrrrrr</h1>
     </Tooltip>
   </header>
@@ -12,8 +12,8 @@
   <Icon icon="arrow-up" size="2xl" type="primary"></Icon>
   <Button ref="buttonRef" type="primary" plain disabled>Test</Button>
   <a href="">click me!!</a>
-  <Button plain>plain button</Button>
-  <Button round>round button</Button>
+  <Button plain @click="open">plain button</Button>
+  <Button round @click="close">round button</Button>
   <Button circle @click="Click">vk</Button>
   <Button type="success">success button</Button>
   <Button disabled>disabled button</Button>
@@ -53,14 +53,22 @@ import Collapse from './components/Callapse/Callapse.vue'
 import CollapseItem from './components/Callapse/CallapseItem.vue'
 import Icon from './components/Icon/Icon.vue'
 import Tooltip from './components/Tooltip/Tooltip.vue'
-import {createPopper, Instance} from '@popperjs/core'
+import {createPopper, hide, Instance} from '@popperjs/core'
 import { ref,onMounted } from 'vue'
 import type {ButtonInstance} from './components/Button/type'
+import type { TooltipInstance } from './components/Tooltip/type'
 const buttonRef=ref<ButtonInstance|null>(null)
+const tooltipRef=ref<TooltipInstance|null>(null)
 const overlayNode=ref<HTMLElement|null>(null)
 const triggerNode=ref<HTMLElement|null>(null)
 let popperInstance:Instance|null=null
-let trigger=ref<any>('hover')
+let trigger=ref<any>('click')
+const open=()=>{
+  tooltipRef.value?.show()
+}
+const close=()=>{
+  tooltipRef.value?.hide()
+}
 onMounted(()=>{
     if(buttonRef.value){
         console.log(buttonRef.value.ref);
@@ -71,6 +79,11 @@ onMounted(()=>{
         placement:'top'
       })
     }
+    setTimeout(()=>{
+      trigger.value='hover'
+    },3000)
+    
+
 })
 setTimeout(()=>{
   popperInstance?.setOptions({
